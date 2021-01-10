@@ -1,23 +1,23 @@
 package com.ps.user.model;
-import java.time.LocalDateTime;
+
 import java.util.Set;
-
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 
 @Table(value="APPUser")
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-
+@AllArgsConstructor
+@Data
+@Builder
 public class APPUser implements Persistable<Integer> {
 
 	@Id
@@ -55,27 +55,7 @@ public class APPUser implements Persistable<Integer> {
 		super();
 	}
 
-//	public APPUser(Integer id, String userName, String password, Long mobile, String email, String createdBy,
-//			String lastUpdatedBy, String currentStatus, LocalDateTime createdTime, LocalDateTime lastUpdatedTime,
-//			String userType, Set<String> roles) {
-//		super();
-//		this.id = id;
-//		this.userName = userName;
-//		this.password = password;
-//		this.mobile = mobile;
-//		this.email = email;
-//		this.createdBy = createdBy;
-//		this.lastUpdatedBy = lastUpdatedBy;
-//		this.currentStatus = currentStatus;
-//		this.createdTime = createdTime;
-//		this.lastUpdatedTime = lastUpdatedTime;
-//		this.userType = userType;
-//		this.roles = roles;
-//	}
 
-
-
-	
 	public String getUserName() {
 		return userName;
 	}

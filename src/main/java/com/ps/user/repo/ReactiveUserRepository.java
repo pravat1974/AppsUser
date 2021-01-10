@@ -21,6 +21,11 @@ public class ReactiveUserRepository {
 	    	 
 	    	return  r2dbcEntityTemplate.insert(entity);
 	     }
+	 	public Mono<APPUser> update(APPUser user) {
+			
+			return r2dbcEntityTemplate.update(user);
+		}
+		
 
 		public  Flux<APPUser> findAll() {
 			return  r2dbcEntityTemplate.select(APPUser.class).all();
@@ -46,6 +51,7 @@ public class ReactiveUserRepository {
 	  public  Mono<Void> delete(APPUser user){
 	    	 return this.r2dbcEntityTemplate.delete(user).then();
 	    }
-	
+
+
 
 }

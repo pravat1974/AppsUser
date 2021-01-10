@@ -20,7 +20,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
-public interface IUserService {
+public interface UserService {
 	
 	public Mono<APPUser> createUser(APPUser user);
 	public Mono<APPUser> updateUser(APPUser user);

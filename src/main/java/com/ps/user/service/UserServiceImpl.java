@@ -17,7 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private ReactiveUserRepository userRepository;
@@ -25,9 +25,8 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public Mono<APPUser> createUser(final APPUser user) {
 		try {
-//			Mono<APPUser> newUser = userRepository.findByEmail(user.getEmail())
-//					.switchIfEmpty(saveUser(user));
-	return userRepository.save(user);
+
+			return userRepository.save(user);
 		
 		} catch (Exception ex) {
 			System.out.println("error is user is " + ex);
@@ -36,22 +35,13 @@ public class UserServiceImpl implements IUserService {
 	}
 	
 	private Mono<APPUser> saveUser(APPUser user){
-		System.out.println(" user is " + user);
+		
 		return userRepository.save(user);
 	}
 
 	@Override
 	public Mono<APPUser> updateUser(final APPUser user) {
-		return null;
-//		return userRepository.findById(user.getId()).flatMap(updatedUser -> {
-//			LocalDateTime time = LocalDateTime.now();
-//			updatedUser.setCreatedTime(time);
-//			updatedUser.setLastUpdatedTime(time);
-//			BeanUtils.copyProperties(user, updatedUser);
-//
-//			return this.userRepository.save(updatedUser);
-//
-//		});
+	return  userRepository.update(user);
 	}
 
 	
@@ -67,7 +57,7 @@ public class UserServiceImpl implements IUserService {
 	
 	@Override
 	public Flux<APPUser> getUsersByCriteria() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -78,8 +68,8 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public Mono<APPUser> getUser(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return userRepository.findById(id);
 	}
 	
 	private UserDTO  convert(APPUser user){
