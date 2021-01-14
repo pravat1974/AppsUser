@@ -10,8 +10,8 @@ CREATE TABLE APPUser
     createdBy text ,
     lastUpdatedBy text ,
     currentStatus text ,
-    createdTime time without time zone NOT NULL,
-    lastUpdatedTime time without time zone NOT NULL,
+    createdTime timestamp without time zone,
+    lastUpdatedTime timestamp without time zone,
     userType text 
 )
 

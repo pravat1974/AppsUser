@@ -2,6 +2,7 @@ package com.ps.user.repo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
+import org.springframework.data.r2dbc.core.ReactiveDeleteOperation.ReactiveDelete;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,9 @@ public class ReactiveUserRepository {
 	private R2dbcEntityTemplate r2dbcEntityTemplate;
 	
 	     public Mono<APPUser> save(APPUser entity){
-	    	 
+	    
 	    	return  r2dbcEntityTemplate.insert(entity);
+	    	
 	     }
 	 	public Mono<APPUser> update(APPUser user) {
 			
@@ -51,6 +53,10 @@ public class ReactiveUserRepository {
 	  public  Mono<Void> delete(APPUser user){
 	    	 return this.r2dbcEntityTemplate.delete(user).then();
 	    }
+	  public  Mono<Integer> deleteAll(){
+	    	 return this.r2dbcEntityTemplate.delete(APPUser.class).all();
+	    }
+
 
 
 

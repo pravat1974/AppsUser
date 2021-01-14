@@ -10,17 +10,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ps.user.dtos.UserDTO;
 import com.ps.user.model.APPUser;
-
+import com.ps.user.repo.ReactiveUserCrudRepository;
 import com.ps.user.repo.ReactiveUserRepository;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private ReactiveUserRepository userRepository;
+	//@Autowired
+	//private ReactiveUserCrudRepository crudRepository;
 
 	@Override
 	public Mono<APPUser> createUser(final APPUser user) {
@@ -41,15 +44,20 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Mono<APPUser> updateUser(final APPUser user) {
-	return  userRepository.update(user);
+		return  userRepository.update(user);
 	}
 
 	
 
 	@Override
 	public Flux<APPUser> geAllUser() {
-
-		return userRepository.findAll();
+		//return crudRepository.findAll();
+       
+		
+		  Flux<APPUser> user = userRepository.findAll();
+		 System.out.println("APPUser"+user); 
+		 return user;
+		 
 	
 	}
 
@@ -62,12 +70,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Mono<Void> deleteUser(Integer id) {
-		return userRepository.findById(id).flatMap(userRepository::delete) ;
+	public Mono<APPUser> deleteUser(Integer id) {
+		return userRepository.findById(id)
+				.flatMap(user ->this.userRepository.delete(user).thenReturn(user) );
+		
+		//.flatMap(userRepository::delete) ;
 	}
 
 	@Override
-	public Mono<APPUser> getUser(Integer id) {
+	public Mono<APPUser> findById(Integer id) {
 		
 		return userRepository.findById(id);
 	}
@@ -77,5 +88,9 @@ public class UserServiceImpl implements UserService {
        BeanUtils.copyProperties(user, dto);
        return dto;
 	}
-
+	@Override
+	public Mono<Integer> deleteAll() {
+		
+		return userRepository.deleteAll();
+	}
 }

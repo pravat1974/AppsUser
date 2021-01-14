@@ -24,10 +24,11 @@ public interface UserService {
 	
 	public Mono<APPUser> createUser(APPUser user);
 	public Mono<APPUser> updateUser(APPUser user);
-	public Mono<Void> deleteUser(Integer id);
+	public Mono<APPUser> deleteUser(Integer id);
 	public Flux<APPUser> geAllUser();
-	public Mono<APPUser> getUser(Integer id);
+	public Mono<APPUser> findById(Integer id);
 	public Flux<APPUser> getUsersByCriteria();
+	Mono<Integer> deleteAll();
 
 }
 

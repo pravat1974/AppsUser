@@ -2,12 +2,14 @@ package com.ps.user.controller;
 
 import java.time.LocalDateTime;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,35 +60,39 @@ public class UserController {
 	public Mono<APPUser> updateUser(@RequestBody UserDTO userDto) {
 		APPUser user = new APPUser();
 		BeanUtils.copyProperties(userDto, user);
+		user.setCreatedTime(LocalDateTime.now());
+		user.setLastUpdatedTime(LocalDateTime.now());
 		return userService.updateUser(user);
 
 	}
 
-	@PutMapping(value = "/delete/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Mono<Void> deleteUser(@PathVariable("id") Integer id) {
+	@DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.OK)
+	public Mono<APPUser> deleteUser(@PathVariable("id") Integer id) {
 	
 		return userService.deleteUser(id);
 
 	}
 
-	@GetMapping(value = "/findAll", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Flux<UserDTO> findAllUser() {
-		   	Flux<UserDTO> appUser = userService.geAllUser()
-				.map(new Function<APPUser, UserDTO>() {
+	@GetMapping(value = "/findAll", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.OK)
+	public Flux<APPUser> findAllUser() {
+		   	Flux<APPUser> appUser = userService.geAllUser();
+			/*	.map(new Function<APPUser, UserDTO>() {
 						public UserDTO apply(APPUser user) {
 							UserDTO dto = new UserDTO();
 							BeanUtils.copyProperties(user, dto);
 							return dto;
-			}
-		});
+			}  
+		});*/
   
-		return appUser;
+	return appUser;
 
 	}
-	@PutMapping(value = "/user/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/user/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public Mono<APPUser> findById(@PathVariable("id") Integer id) {
 	
-		return userService.getUser(id);
+		return userService.findById(id);
 
 	}
 

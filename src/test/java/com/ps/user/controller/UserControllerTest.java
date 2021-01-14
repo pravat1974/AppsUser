@@ -5,8 +5,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.joda.time.LocalDate;
+import javax.annotation.Priority;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,40 +27,24 @@ import com.ps.user.model.APPUser;
 import com.ps.user.service.UserService;
 
 import lombok.extern.log4j.Log4j2;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @WebFluxTest(UserController.class)
 @Log4j2
+
 public class UserControllerTest {
 
 	@Autowired
 	private WebTestClient webTestClient;
 	@MockBean
 	private UserService userService;
-
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-	}
-
-	@BeforeEach
-	void setUp() throws Exception {
-	}
-
-	@AfterEach
-	void tearDown() throws Exception {
-	}
-
-	@Test
-	void testUserController() {
-		fail("Not yet implemented");
-	}
+	
+	
 
 	@Test
 	void testCreateUser() {
+		System.out.println("Test start");
 		APPUser user = new APPUser();
 		user.setUserName("Pravat");
 		user.setUserType("ADMIN");
@@ -71,8 +58,10 @@ public class UserControllerTest {
 		when(userService.createUser(user)).thenReturn(monoUser);
 		UserDTO userDto = new UserDTO();
 		BeanUtils.copyProperties(user, userDto, "ID");
-		webTestClient.post().uri("/api/users/create").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-				.body(Mono.just(userDto), UserDTO.class).exchange().expectStatus().isCreated();
+		webTestClient.post().uri("/api/users/create").contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON).body(Mono.just(userDto), UserDTO.class).exchange().expectStatus()
+				.isCreated();
+		System.out.println("Test end");
 	}
 
 	@Test
@@ -85,23 +74,20 @@ public class UserControllerTest {
 		user.setCurrentStatus("Notactive");
 		user.setEmail("pravat.sahoo@hotmail.com");
 		user.setPassword("password123");
-		user.setId(3);
+		user.setId(1);
 		Mono<APPUser> monoUser = Mono.just(user);
 		when(userService.createUser(user)).thenReturn(monoUser);
-		when(userService.getUser(user.getId()))
-         .thenReturn(Mono.just(user));
+		when(userService.findById(user.getId())).thenReturn(Mono.just(user));
 		UserDTO userDto = new UserDTO();
 		BeanUtils.copyProperties(user, userDto, "ID");
-		webTestClient.put()
-		.uri("/api/users/update")
-		.contentType(MediaType.APPLICATION_JSON)
-		.accept(MediaType.APPLICATION_JSON)
-		.body(Mono.just(userDto), UserDTO.class)
-		.exchange().expectStatus().isOk();
-	
+		webTestClient.put().uri("/api/users/update").contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON).body(Mono.just(userDto), UserDTO.class).exchange().expectStatus()
+				.isOk();
+
 	}
 
 	@Test
+	
 	void testDeleteUser() {
 		APPUser user = new APPUser();
 		user.setUserName("Priti");
@@ -114,26 +100,34 @@ public class UserControllerTest {
 		user.setId(15);
 		Mono<APPUser> monoUser = Mono.just(user);
 		when(userService.createUser(user)).thenReturn(monoUser);
-		webTestClient.delete()
-		.uri("/api/users/delete/{15}")
-		.exchange()
-		.expectStatus().isOk();
+		webTestClient.delete().uri("/api/users/delete/15").exchange().expectStatus().isOk();
 	}
 
 	@Test
 	void testFindAllUser() {
-		webTestClient.get()
-		.uri("/api/users/findAll")
-		.accept(MediaType.APPLICATION_JSON)
-		.exchange()
-		.expectStatus().isOk()
-		.expectBodyList(APPUser.class)
-		.value(users-> users.forEach(user->assertTrue(user.getCreatedBy().equalsIgnoreCase("pravat"))));
+		UserDTO  dtoOne = new UserDTO();
+		 dtoOne.setId(4);
+		 UserDTO  dtoTwo = new UserDTO();
+		 dtoTwo.setId(1);
+ webTestClient
+		  .get()
+		  .uri("/api/users/findAll")
+			.accept(MediaType.APPLICATION_JSON)
+		 	  .exchange()
+		 .expectStatus()
+		.isOk()
+	
+		.expectBody(APPUser.class);
 		
+ 
+ 
+				
+
 	}
+
 	@Test
 	void testFindUser() {
-		
+
 		APPUser user = new APPUser();
 		user.setUserName("Priti");
 		user.setUserType("ADMIN");
@@ -145,14 +139,13 @@ public class UserControllerTest {
 		user.setId(12);
 		Mono<APPUser> monoUser = Mono.just(user);
 		when(userService.createUser(user)).thenReturn(monoUser);
-		webTestClient.get()
-		.uri("/api/users/user/12")
+		
+		webTestClient.get().uri("/api/users/user/12")
 		.accept(MediaType.APPLICATION_JSON)
-		.exchange()
-		.expectStatus().isOk()
-		.expectBody(APPUser.class)
-		.value(userOne-> user.getEmail(),equalTo("priti.sahoo@hotmail.com"));
-}
-	
+		.exchange().expectStatus()
+		 .isOk()
+				
+		 .expectBody(APPUser.class).value(userOne -> user.getEmail(), equalTo("priti.sahoo@hotmail.com"));
+	}
 
 }

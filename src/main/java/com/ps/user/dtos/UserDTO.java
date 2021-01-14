@@ -1,5 +1,6 @@
 package com.ps.user.dtos;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Set;
 import org.springframework.data.annotation.Id;
@@ -7,10 +8,10 @@ import org.springframework.data.annotation.Transient;
 
 public class UserDTO {
 
-	private Integer ID;
+	private Integer id;
 	private String userName;
 	private String password;
-	private Long mobile;
+	private BigInteger mobile;
 	private String email;
 	private String createdBy;
 	private String lastUpdatedBy;
@@ -24,11 +25,11 @@ public class UserDTO {
 		super();
 	}
 
-	public UserDTO(Integer id, String userName, String password, Long mobile, String email, String createdBy,
+	public UserDTO(Integer id, String userName, String password, BigInteger mobile, String email, String createdBy,
 			String lastUpdatedBy, String currentStatus, LocalDateTime createdTime, LocalDateTime lastUpdatedTime,
 			String userType, Set<String> roles) {
 		super();
-		this.ID = id;
+		this.id = id;
 		this.userName = userName;
 		this.password = password;
 		this.mobile = mobile;
@@ -42,12 +43,14 @@ public class UserDTO {
 	}
 
 	
-	public Integer getID() {
-		return ID;
+	
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setID(Integer iD) {
-		ID = iD;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getUserName() {
@@ -66,11 +69,11 @@ public class UserDTO {
 		this.password = password;
 	}
 
-	public Long getMobile() {
+	public BigInteger getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(Long mobile) {
+	public void setMobile(BigInteger mobile) {
 		this.mobile = mobile;
 	}
 
@@ -112,6 +115,31 @@ public class UserDTO {
 
 	public void setUserType(String userType) {
 		this.userType = userType;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserDTO other = (UserDTO) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 
