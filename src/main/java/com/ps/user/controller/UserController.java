@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ps.user.dtos.UserDTO;
 import com.ps.user.model.APPUser;
 
-
 import com.ps.user.service.UserService;
 
 import org.slf4j.Logger;
@@ -30,14 +31,13 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
 @RestController
 @RequestMapping("/api/users/")
 public class UserController {
-	
+
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-    
-	 @Autowired
+
+	@Autowired
 	private UserService userService;
 
 	public UserController(UserService userService) {
@@ -47,17 +47,24 @@ public class UserController {
 
 	@PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Mono<APPUser> createUser(@RequestBody UserDTO userDto) {
-		APPUser user = new APPUser();
-		BeanUtils.copyProperties(userDto, user, "ID");
-		user.setCreatedTime(LocalDateTime.now());
-		user.setLastUpdatedTime(LocalDateTime.now());
-		return userService.createUser(user);
+	public Mono<APPUser> createUser(@RequestBody @Valid UserDTO userDto) {
+		try {
+
+			APPUser user = new APPUser();
+			BeanUtils.copyProperties(userDto, user, "ID");
+			user.setCreatedTime(LocalDateTime.now());
+			user.setLastUpdatedTime(LocalDateTime.now());
+			return userService.createUser(user);
+		} catch (Exception ex) {
+			log.error(ex.getLocalizedMessage());
+			ex.printStackTrace();
+		}
+		return null;
 
 	}
 
 	@PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Mono<APPUser> updateUser(@RequestBody UserDTO userDto) {
+	public Mono<APPUser> updateUser(@RequestBody @Valid UserDTO userDto) {
 		APPUser user = new APPUser();
 		BeanUtils.copyProperties(userDto, user);
 		user.setCreatedTime(LocalDateTime.now());
@@ -69,7 +76,7 @@ public class UserController {
 	@DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
 	public Mono<APPUser> deleteUser(@PathVariable("id") Integer id) {
-	
+
 		return userService.deleteUser(id);
 
 	}
@@ -77,21 +84,20 @@ public class UserController {
 	@GetMapping(value = "/findAll", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
 	public Flux<APPUser> findAllUser() {
-		   	Flux<APPUser> appUser = userService.geAllUser();
-			/*	.map(new Function<APPUser, UserDTO>() {
-						public UserDTO apply(APPUser user) {
-							UserDTO dto = new UserDTO();
-							BeanUtils.copyProperties(user, dto);
-							return dto;
-			}  
-		});*/
-  
-	return appUser;
+		Flux<APPUser> appUser = userService.geAllUser();
+		/*
+		 * .map(new Function<APPUser, UserDTO>() { public UserDTO apply(APPUser user) {
+		 * UserDTO dto = new UserDTO(); BeanUtils.copyProperties(user, dto); return dto;
+		 * } });
+		 */
+
+		return appUser;
 
 	}
-	@GetMapping(value = "/user/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@GetMapping(value = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Mono<APPUser> findById(@PathVariable("id") Integer id) {
-	
+
 		return userService.findById(id);
 
 	}

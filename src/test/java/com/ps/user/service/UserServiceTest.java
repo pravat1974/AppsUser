@@ -26,13 +26,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.StringUtils;
 
+@SuppressWarnings("deprecation")
 @DataR2dbcTest
 @ActiveProfiles("test")
 @Import(UserServiceImpl.class)
 @ContextConfiguration(initializers = ConfigFileApplicationContextInitializer.class, classes = TestPostgressDBConfig.class)
 @TestPropertySource(locations="classpath:application-test.properties")
 @EnableConfigurationProperties
-
 public class UserServiceTest {
 
 

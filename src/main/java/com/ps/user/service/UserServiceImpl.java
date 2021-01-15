@@ -27,14 +27,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Mono<APPUser> createUser(final APPUser user) {
-		try {
+		
 
 			return userRepository.save(user);
 		
-		} catch (Exception ex) {
-			System.out.println("error is user is " + ex);
-		}
-		return null;
 	}
 	
 	private Mono<APPUser> saveUser(APPUser user){
@@ -51,11 +47,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Flux<APPUser> geAllUser() {
-		//return crudRepository.findAll();
+	
        
 		
 		  Flux<APPUser> user = userRepository.findAll();
-		 System.out.println("APPUser"+user); 
+		
 		 return user;
 		 
 	

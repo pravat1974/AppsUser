@@ -2,6 +2,13 @@ package com.ps.user.model;
 
 import java.math.BigInteger;
 import java.util.Set;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
@@ -14,24 +21,33 @@ import lombok.Data;
 
 
 @Table(value="APPUser")
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @Data
 @Builder
+@JsonIgnoreProperties({ "lastUpdatedTime", "createdTime", "newUser", "roles" })
 public class APPUser implements Persistable<Integer> {
 
 	@Id
 	@Column("id")
 	private Integer id;
-	@Column("userName")
+	
+	@NotBlank(message="{blank.username}")
+	@Size(min = 4,max = 20,message="{size.username}")
+	@Column("username")
 	private String userName;
-	@Column("password")
+	
+	@NotBlank(message="{blank.password}")
+	@Size(min = 8,max = 20,message="{size.password}")
 	private String password;
-	@Column("mobile")
+	
+	@NotNull(message="{size.mobile}")
 	private BigInteger mobile;
-	@Column("email")
+	
+	@NotBlank(message="{blank.email}")
+	@Size(min = 8,max = 200,message="{size.email}")
+	@Email(regexp = "^[A-Za-z0-9+_.-]+@(.+)$",message="{valid.email}" )
 	private String email;
+	
 	@Column("createdBy")
 	private String createdBy;
 	@Column("lastUpdatedBy")
@@ -39,8 +55,10 @@ public class APPUser implements Persistable<Integer> {
 	@Column("currentStatus")
 	private String currentStatus;
 	@Column("createdTime")
+	@NotNull
 	private java.time.LocalDateTime createdTime;
 	@Column("lastUpdatedTime")
+	@NotNull
 	private java.time.LocalDateTime lastUpdatedTime;
 	@Column("userType")
 	private String userType;

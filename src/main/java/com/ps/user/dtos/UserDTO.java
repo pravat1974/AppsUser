@@ -3,16 +3,35 @@ package com.ps.user.dtos;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Set;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 public class UserDTO {
 
 	private Integer id;
+	
+	@NotBlank(message="{blank.username}")
+	@Size(min = 4,max = 20,message="{size.username}")
 	private String userName;
+	
+	@NotBlank(message="{blank.password}")
+	@Size(min = 8,max = 20,message="{size.password}")
 	private String password;
+	
+	@NotNull(message="{size.mobile}")
 	private BigInteger mobile;
+	
+	@NotBlank(message="{blank.email}")
+	@Size(min = 8,max = 200,message="{size.email}")
+	@Email(regexp = "^[A-Za-z0-9+_.-]+@(.+)$",message="{valid.email}")
 	private String email;
+
 	private String createdBy;
 	private String lastUpdatedBy;
 	private String currentStatus;
@@ -25,25 +44,6 @@ public class UserDTO {
 		super();
 	}
 
-	public UserDTO(Integer id, String userName, String password, BigInteger mobile, String email, String createdBy,
-			String lastUpdatedBy, String currentStatus, LocalDateTime createdTime, LocalDateTime lastUpdatedTime,
-			String userType, Set<String> roles) {
-		super();
-		this.id = id;
-		this.userName = userName;
-		this.password = password;
-		this.mobile = mobile;
-		this.email = email;
-		this.createdBy = createdBy;
-		this.lastUpdatedBy = lastUpdatedBy;
-		this.currentStatus = currentStatus;
-
-		this.userType = userType;
-		
-	}
-
-	
-	
 
 	public Integer getId() {
 		return id;
@@ -140,6 +140,14 @@ public class UserDTO {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+
+	@Override
+	public String toString() {
+		return "UserDTO [id=" + id + ", userName=" + userName + ", password=" + password + ", mobile=" + mobile
+				+ ", email=" + email + ", createdBy=" + createdBy + ", lastUpdatedBy=" + lastUpdatedBy
+				+ ", currentStatus=" + currentStatus + ", userType=" + userType + "]";
 	}
 
 
