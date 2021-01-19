@@ -9,6 +9,9 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import com.ps.user.service.UserService;
 import com.ps.user.service.UserServiceImpl;
 
+
+
+
 @Configuration
 public class ServiceConfig {
 	
@@ -31,5 +34,6 @@ public class ServiceConfig {
 	    bean.setValidationMessageSource(messageSource());
 	    return bean;
 	}
+	
 
 }

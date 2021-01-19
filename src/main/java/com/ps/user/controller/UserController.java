@@ -1,10 +1,8 @@
 package com.ps.user.controller;
 
 import java.time.LocalDateTime;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ps.user.dtos.UserDTO;
+import com.ps.user.exception.GlobalException;
 import com.ps.user.model.APPUser;
 
 import com.ps.user.service.UserService;
@@ -30,13 +29,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import static java.util.UUID.randomUUID;
 
 @RestController
 @RequestMapping("/api/users/")
 public class UserController {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-
+	@Autowired
+    private Validator validator;
 	@Autowired
 	private UserService userService;
 
@@ -46,20 +47,21 @@ public class UserController {
 	}
 
 	@PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseStatus(HttpStatus.CREATED)
-	public Mono<APPUser> createUser(@RequestBody @Valid UserDTO userDto) {
-		try {
-
-			APPUser user = new APPUser();
-			BeanUtils.copyProperties(userDto, user, "ID");
-			user.setCreatedTime(LocalDateTime.now());
-			user.setLastUpdatedTime(LocalDateTime.now());
-			return userService.createUser(user);
-		} catch (Exception ex) {
-			log.error(ex.getLocalizedMessage());
-			ex.printStackTrace();
+	// @ResponseStatus(HttpStatus.CREATED)
+	public Mono<APPUser> createUser(@Valid @RequestBody UserDTO userDto) {
+		
+		if(userDto.getId()!=null) {
+			return Mono.error(new GlobalException(HttpStatus.BAD_REQUEST, "Error: ID is not allowed while creating user"));
 		}
-		return null;
+	
+		APPUser user = new APPUser();
+		BeanUtils.copyProperties(userDto, user, "ID");
+		user.setCreatedTime(LocalDateTime.now());
+		user.setLastUpdatedTime(LocalDateTime.now());
+		// log.info(" Data ="+user);
+		Mono<APPUser> appUser = userService.createUser(user);
+
+		return appUser;
 
 	}
 

@@ -212,6 +212,15 @@ public class APPUser implements Persistable<Integer> {
 	}
 
 
+	@Override
+	public String toString() {
+		return "APPUser [id=" + id + ", userName=" + userName + ", password=" + password + ", mobile=" + mobile
+				+ ", email=" + email + ", createdBy=" + createdBy + ", lastUpdatedBy=" + lastUpdatedBy
+				+ ", currentStatus=" + currentStatus + ", createdTime=" + createdTime + ", lastUpdatedTime="
+				+ lastUpdatedTime + ", userType=" + userType + ", roles=" + roles + ", newUser=" + newUser + "]";
+	}
+
+
 	
 
 }

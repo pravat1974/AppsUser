@@ -45,6 +45,19 @@ public class ReactiveUserRepository {
 		                .matching(Query.query(Criteria.where("email").is(mobile))).all();
 	
 		}
+		public  Flux<APPUser> findByUserName(String userName) {
+			
+			  return  this.r2dbcEntityTemplate.select(APPUser.class)
+		                .matching(Query.query(Criteria.where("userName").is(userName))).all();
+	
+		}
+	public Flux<APPUser> findUser(APPUser user) {
+			
+		  return  this.r2dbcEntityTemplate.select(APPUser.class)
+	                .matching(Query.query(Criteria.where("mobile").is(user.getMobile())
+	                		        		.or(Criteria.where("email").is(user.getEmail()))
+	                		.or(Criteria.where("userName").is(user.getUserName())))).all();
+		}
 	
 		public  Mono<APPUser> findById(Integer id) {
 		   return this.r2dbcEntityTemplate.selectOne(
