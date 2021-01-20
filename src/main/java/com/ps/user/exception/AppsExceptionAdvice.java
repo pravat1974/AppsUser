@@ -1,5 +1,6 @@
 package com.ps.user.exception;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
@@ -12,44 +13,24 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.server.ServerRequest;
 
 import ch.qos.logback.classic.Logger;
+import reactor.core.publisher.Mono;
 
 @RestControllerAdvice
-public class AppsExceptionAdvice extends DefaultErrorAttributes{
+public class AppsExceptionAdvice {
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AppsExceptionAdvice.class);
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AppsExceptionAdvice.class);
 
-	
-	@ExceptionHandler(Exception.class)
+	@ExceptionHandler(value = GlobalException.class)
+	@ResponseStatus(code = HttpStatus.OK)
+	public GlobalException serverExceptionHandler(GlobalException ex) {
+		LocalDateTime timeStamp = LocalDateTime.now();
+		int code = ex.getStatus().value();
+		String message = ex.getMessage();
+		String reason = ex.getReason();
+		ErrorResponse errorResponse = new ErrorResponse(timeStamp, code, message, reason, "");
+		
 
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public ErrorResponse serverExceptionHandler(Exception ex) {
-		
-	    String message  = ex.getMessage();
-		int code  = HttpStatus.INTERNAL_SERVER_ERROR.value();
-		//String path =request.requestPath().toString();
-		String exceptionName = ex.getClass().getSimpleName();
-		
-		
-		return  new ErrorResponse(code,message,exceptionName,"");
+		return ex;
 	}
 
-	/*
-	 * @ExceptionHandler(Exception.class)
-	 * 
-	 * @Override public Map<String, Object> getErrorAttributes(ServerRequest
-	 * request, boolean includeStackTrace) { Map<String, Object> map =
-	 * super.getErrorAttributes(request, includeStackTrace);
-	 * 
-	 * if (getError(request) instanceof GlobalException) { GlobalException ex =
-	 * (GlobalException) getError(request); map.put("exception",
-	 * ex.getClass().getSimpleName()); map.put("message", ex.getMessage());
-	 * map.put("status", ex.getStatus().value()); map.put("error",
-	 * ex.getStatus().getReasonPhrase());
-	 * 
-	 * return map; }
-	 * 
-	 * map.put("exception", "SystemException"); map.put("message",
-	 * "System Error , Check logs!"); map.put("status", "500"); map.put("error",
-	 * " System Error "); return map; }
-	 */
 }

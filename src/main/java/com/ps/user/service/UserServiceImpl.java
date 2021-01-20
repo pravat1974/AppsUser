@@ -7,8 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.ps.user.dtos.UserDTO;
 import com.ps.user.exception.APPSDataAccessException;
@@ -40,9 +42,9 @@ public class UserServiceImpl implements UserService {
 					if(data.isEmpty()) {
 						return userRepository.save(user);
 					}else {
-						 return Mono.error(new  AlreadyExistsException("User already exist with same user name or mobile or email "));
+						 return Mono.error(new  AlreadyExistsException(HttpStatus.CONFLICT,"User already exist with same user name or mobile or email "));
 					}
-				}).onErrorMap((e)->new GlobalException(null, "Data Access error", e));
+				});
 		
 			return appUser;
 		

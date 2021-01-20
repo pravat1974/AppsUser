@@ -1,12 +1,16 @@
 package com.ps.user.exception;
 
-public class AlreadyExistsException extends RuntimeException{
+import org.springframework.core.NestedRuntimeException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+public class AlreadyExistsException  extends ResponseStatusException{
 	
 	private String message ;
-
-	public AlreadyExistsException(String message) {
-		super();
-		this.message = message;
+	
+	public AlreadyExistsException(HttpStatus status, String reason) {
+		super(status, reason);
+		
 	}
 
 
