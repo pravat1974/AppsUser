@@ -27,8 +27,7 @@ import static io.r2dbc.pool.PoolingConnectionFactoryProvider.MAX_SIZE;
 @EnableR2dbcRepositories
 public class PostgressDBConfig extends AbstractR2dbcConfiguration {
 
-	@Value("${spring.r2dbc.url}")
-	private String JDBCURL;
+	
 	@Value("${postgres.r2dbc.username}")
 	private String USERNAME;
 	@Value("${postgres.r2dbc.password}")
