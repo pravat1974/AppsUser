@@ -7,23 +7,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-
 
 @Table(value="APPUser")
-@AllArgsConstructor
-@Data
-@Builder
 @JsonIgnoreProperties({ "lastUpdatedTime", "createdTime", "newUser", "roles" })
 public class APPUser implements Persistable<Integer> {
 

@@ -1,16 +1,10 @@
 package com.ps.user.dtos;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.Set;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 
 public class UserDTO {
 
